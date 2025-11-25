@@ -1,6 +1,9 @@
 package exercises.shopping_app;
 
+import edu.touro.mcon264.apps.collections.ArrayBasedList;
 import edu.touro.mcon264.apps.collections.ListInterface;
+
+import java.util.Scanner;
 
 /**
  * Creates a ListInterface<ShoppingItem> instance.
@@ -11,10 +14,64 @@ import edu.touro.mcon264.apps.collections.ListInterface;
  * “Shop” the next item on the list.
  * Exit the program.
  */
-public class ShoppingListApp {
+public class ShoppingListApp{
     public static void main(String[] args) {
-        //TODO
+            Scanner scanner = new Scanner(System.in);
+
+            // Choose implementation:
+            ListInterface<ShoppingItem> shoppingList = new ArrayBasedList<>();
+            // or:
+            // ListInterface<ShoppingItem> shoppingList = new LinkedBasedList<>();
+
+            boolean running = true;
+
+            while (running) {
+                printMenu();
+                System.out.print("Choose an option: ");
+                String choice = scanner.nextLine().trim();
+
+                switch (choice) {
+                    case "1":
+                        System.out.print("Enter aisle: ");
+                        String aisle = scanner.nextLine().trim();
+                        System.out.print("Enter item name: ");
+                        String name = scanner.nextLine().trim();
+                        ShoppingItem newItem = new ShoppingItem(aisle, name);
+                        insertSorted(shoppingList, newItem);
+                        System.out.println("Added: " + newItem);
+                        break;
+                    case "2":
+                        System.out.println("Current shopping list:");
+                        printList(shoppingList);
+                        break;
+                    case "3":
+                        ShoppingItem next = shopNext(shoppingList);
+                        if (next == null) {
+                            System.out.println("All done! No items left to shop.");
+                        } else {
+                            System.out.println("Next item to buy: " + next);
+                        }
+                        break;
+                    case "0":
+                        running = false;
+                        System.out.println("Goodbye!");
+                        break;
+                    default:
+                        System.out.println("Unknown option. Please try again.");
+                }
+
+                System.out.println();
+            }
     }
+
+    private static void printMenu() {
+        System.out.println("=== Shopping List Menu ===\n" +
+                "1. Add item\n" +
+                "2. Show current shopping list\n" +
+                "3. Shop next item\n" +
+                "0. Exit");
+    }
+
     /**
      * Inserts the given item into the list so that the list remains sorted
      * by aisle and then item name.
@@ -27,9 +84,19 @@ public class ShoppingListApp {
      * If the list is empty, returns null.
      */
     public static ShoppingItem shopNext(ListInterface<ShoppingItem> list) {
-        // TODO: implement using ListInterface methods
-        return null;
+        if(list.size() == 0){
+            return null;
+        }
+        return list.remove(0);
     }
+
+    private static void printList(ListInterface<ShoppingItem> list) {
+        for(int i = 0; i < list.size(); i++) {
+            System.out.println(i + ": " + list.get(i));
+        }
+    }
+
+
 
 
 }
